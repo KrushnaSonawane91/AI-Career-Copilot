@@ -111,6 +111,8 @@ AI_CAREER_COPILOT/
 ├── .gitignore
 ├── .env
 └── README.md
+```
+
 ---
 
 ## 🔄 Application Workflow
