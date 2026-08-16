@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}History | AI Career Copilot{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+
+    <div>
+
+        <p class="eyebrow">YOUR ACTIVITY</p>
+
+        <h1>Analysis History</h1>
+
+        <p>
+            Review your previous resume analyses and career recommendations.
+        </p>
+
+    </div>
+
+</section>
+
+
+{% if reports %}
+
+<div class="history-list">
+
+    {% for r in reports %}
+
+    <article class="history-card">
+
+        <!-- HEADER -->
+
+        <div class="history-card-header">
+
+            <div>
+
+                <span class="history-label">
+                    RESUME ANALYSIS
+                </span>
+
+                <h2>
+                    Analysis #{{ loop.index }}
+                </h2>
+
+            </div>
+
+            <div class="history-number">
+                {{ loop.index }}
+            </div>
+
+        </div>
+
+
+        <!-- RESUME PREVIEW -->
+
+        <div class="resume-preview">
+
+            <div class="preview-title">
+                📄 Resume Preview
+            </div>
+
+            <p>
+                {{ r.resume[:300] }}
+
+                {% if r.resume|length > 300 %}
+                    ...
+                {% endif %}
+            </p>
+
+        </div>
+
+
+        <!-- SKILLS -->
+
+        <div class="history-section">
+
+            <h3>
+                <span class="section-dot success-dot"></span>
+                Skills
+            </h3>
+
+            <div class="skills-grid">
+
+                {% for s in r.result.get("skills", []) %}
+
+                <div class="skill-tag">
+                    <span>✓</span>
+                    {{ s }}
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- MISSING SKILLS -->
+
+        <div class="history-section">
+
+            <h3>
+                <span class="section-dot warning-dot"></span>
+                Missing Skills
+            </h3>
+
+            <div class="skills-grid">
+
+                {% for s in r.result.get("missing_skills", []) %}
+
+                <div class="missing-skill-tag">
+                    <span>+</span>
+                    {{ s }}
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ROADMAP -->
+
+        <div class="history-section">
+
+            <h3>
+                <span class="section-dot roadmap-dot"></span>
+                Career Roadmap
+            </h3>
+
+            <div class="history-roadmap">
+
+                {% for item in r.result.get("roadmap", []) %}
+
+                {% if item is mapping %}
+
+                <div class="history-roadmap-item">
+
+                    <div class="roadmap-number">
+                        {{ loop.index }}
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            {{ item.get("skill", "") }}
+                        </h4>
+
+                        <p>
+                            {{ item.get("description", "") }}
+                        </p>
+
+                        {% if item.get("resources") %}
+
+                        <strong>
+                            📚 Resources & Practice
+                        </strong>
+
+                        <ul>
+
+                            {% for resource in item.get("resources", []) %}
+
+                            <li>
+                                {{ resource }}
+                            </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="history-roadmap-item">
+
+                    <div class="roadmap-number">
+                        {{ loop.index }}
+                    </div>
+
+                    <div>
+                        <p>{{ item }}</p>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- INTERVIEW QUESTIONS -->
+
+        <div class="history-section">
+
+            <h3>
+                <span class="section-dot interview-dot"></span>
+                Interview Questions
+            </h3>
+
+            <div class="interview-list">
+
+                {% for question in r.result.get("interview_questions", []) %}
+
+                <div class="interview-question">
+
+                    <div class="question-number">
+                        {{ loop.index }}
+                    </div>
+
+                    <p>
+                        {{ question }}
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </article>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+
+    <div class="empty-icon">
+        📋
+    </div>
+
+    <h2>No Analysis Yet</h2>
+
+    <p>
+        You haven't analyzed a resume yet.
+        Start your first analysis from the dashboard.
+    </p>
+
+    <a href="/dashboard" class="primary-button">
+        Analyze Resume
+    </a>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

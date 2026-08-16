@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | AI Career Copilot{% endblock %}
+
+{% block content %}
+
+<!-- WELCOME -->
+
+<section class="welcome-section">
+
+    <div>
+        <p class="eyebrow">AI CAREER ASSISTANT</p>
+
+        <h1>
+            Welcome, <span>{{ name }}</span> 👋
+        </h1>
+
+        <p class="welcome-text">
+            Analyze your resume, discover missing skills,
+            and build a personalized career roadmap.
+        </p>
+    </div>
+
+</section>
+
+
+<!-- ANALYZER -->
+
+<section class="analyzer-card">
+
+    <div class="section-heading">
+
+        <div class="section-icon">
+            📄
+        </div>
+
+        <div>
+            <h2>Resume Analyzer</h2>
+
+            <p>
+                Upload your resume or paste the content below
+                to get AI-powered career recommendations.
+            </p>
+        </div>
+
+    </div>
+
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          class="analyzer-form">
+
+        <div class="form-group">
+
+            <label for="resume">
+                Resume Content
+            </label>
+
+            <textarea
+                id="resume"
+                name="resume"
+                placeholder="Paste your resume here... (optional)"
+            ></textarea>
+
+        </div>
+
+
+        <div class="or-divider">
+            <span>OR</span>
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="file">
+                Upload Resume
+            </label>
+
+            <div class="file-upload">
+
+                <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept=".pdf,.doc,.docx,.txt"
+                >
+
+                <span class="file-hint">
+                    PDF, DOC or DOCX
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="role">
+                Target Career Role
+            </label>
+
+            <input
+                type="text"
+                id="role"
+                name="role"
+                placeholder="e.g. Data Analyst, Python Developer, Backend Engineer"
+                required
+            >
+
+        </div>
+
+
+        <button type="submit" class="primary-button">
+
+            <span>✨</span>
+            Analyze Resume
+
+        </button>
+
+    </form>
+
+</section>
+
+
+{% if result %}
+
+<!-- RESULTS -->
+
+<section class="results-section">
+
+    <div class="results-header">
+
+        <div>
+            <p class="eyebrow">AI ANALYSIS</p>
+            <h2>Your Career Analysis</h2>
+        </div>
+
+        <div class="ai-badge">
+            ✨ AI Generated
+        </div>
+
+    </div>
+
+
+    {% if result.error %}
+
+    <div class="error-box">
+        <strong>Analysis Error</strong>
+        <p>{{ result.error }}</p>
+    </div>
+
+    {% endif %}
+
+
+    <!-- SKILLS -->
+
+    <div class="result-card">
+
+        <div class="result-card-header">
+
+            <div class="result-icon success-icon">
+                ✓
+            </div>
+
+            <div>
+                <h3>Your Skills</h3>
+                <p>Skills identified from your resume</p>
+            </div>
+
+        </div>
+
+
+        <div class="skills-grid">
+
+            {% for s in result.get("skills", []) %}
+
+            <div class="skill-tag">
+                <span>✓</span>
+                {{ s }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- MISSING SKILLS -->
+
+    <div class="result-card">
+
+        <div class="result-card-header">
+
+            <div class="result-icon warning-icon">
+                !
+            </div>
+
+            <div>
+                <h3>Missing Skills</h3>
+                <p>Skills recommended for your target role</p>
+            </div>
+
+        </div>
+
+
+        <div class="skills-grid">
+
+            {% for s in result.get("missing_skills", []) %}
+
+            <div class="missing-skill-tag">
+                <span>+</span>
+                {{ s }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- ROADMAP -->
+
+    <div class="result-card">
+
+        <div class="result-card-header">
+
+            <div class="result-icon roadmap-icon">
+                🚀
+            </div>
+
+            <div>
+                <h3>Career Roadmap</h3>
+                <p>Recommended learning path based on your skill gaps</p>
+            </div>
+
+        </div>
+
+
+        <div class="roadmap">
+
+            {% for item in result.get("roadmap", []) %}
+
+            <div class="roadmap-item">
+
+                <div class="roadmap-number">
+                    {{ loop.index }}
+                </div>
+
+                <div class="roadmap-content">
+
+                    <h4>
+                        {{ item.get("skill", "") }}
+                    </h4>
+
+                    <p>
+                        {{ item.get("description", "") }}
+                    </p>
+
+
+                    {% if item.get("resources") %}
+
+                    <div class="resources">
+
+                        <strong>
+                            📚 Resources & Practice
+                        </strong>
+
+                        <ul>
+
+                            {% for resource in item.get("resources", []) %}
+
+                            <li>
+                                {{ resource }}
+                            </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- INTERVIEW QUESTIONS -->
+
+    <div class="result-card">
+
+        <div class="result-card-header">
+
+            <div class="result-icon interview-icon">
+                💬
+            </div>
+
+            <div>
+                <h3>Interview Questions</h3>
+                <p>Questions you should prepare for your target role</p>
+            </div>
+
+        </div>
+
+
+        <div class="interview-list">
+
+            {% for question in result.get("interview_questions", []) %}
+
+            <div class="interview-question">
+
+                <div class="question-number">
+                    {{ loop.index }}
+                </div>
+
+                <p>
+                    {{ question }}
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}
