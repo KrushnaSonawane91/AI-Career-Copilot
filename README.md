@@ -65,6 +65,8 @@ It also provides user authentication and stores previous resume analysis reports
 
 Users can securely log in to their existing account using their email and password.
 
+![Login](screenshots/login.png)
+
 ### 📝 Signup
 
 New users can create an account by providing:
@@ -72,6 +74,8 @@ New users can create an account by providing:
 - Name
 - Email
 - Password
+
+![Signup](screenshots/signup.png)
 
 ### 📊 Dashboard
 
@@ -82,10 +86,13 @@ After logging in, users can:
 - Enter their target career role
 - Start the AI analysis
 
+![Dashboard](screenshots/dashboard.png)
+
 ### 📜 History
 
 Users can view their previous resume analysis reports stored in the PostgreSQL database.
 
+![History](screenshots/history.png)
 ---
 
 ## 📁 Project Structure
